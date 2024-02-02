@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 env:
   REGISTRY: ghcr.io/acll19
-  CHART_NAME: ${{ github.repository }}
+  CHART_NAME: ${{ github.repository }}-operator
 
 jobs:
   package-and-push-chart:
