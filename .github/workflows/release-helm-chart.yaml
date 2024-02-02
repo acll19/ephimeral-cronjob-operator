@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 env:
   REGISTRY: ghcr.io/acll19
-  CHART_NAME: ${{ github.repository }}-chart
+  CHART_NAME: ${{ github.repository }}
 
 jobs:
   package-and-push-chart:
@@ -36,4 +36,4 @@ jobs:
         run: |
           helm package ./charts/${{ env.LOCAL_CHART_NAME }}
           export CHART_VERSION=$(grep 'version:' ./charts/${{ env.LOCAL_CHART_NAME }}/Chart.yaml | tail -n1 | awk '{ print $2 }')
-          helm push ${{ env.LOCAL_CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}
+          helm push ${{ env.LOCAL_CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}/${{ env.CHART_NAME }}
