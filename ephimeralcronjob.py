@@ -11,10 +11,12 @@ def create_fn(spec, name, namespace, logger, **kwargs):
     logger.info('Detected cronjob %s/%s, handling', namespace, name)
     if not spec.get('schedule'):
         raise kopf.PermanentError('Schedule is required')
+    # TODO: save resource name in status
 
 
 @kopf.on.field('ephimeralcronjobs', field='spec.image')
 def update_image_fn(old, new, status, namespace, logger, **kwargs):
+    # TODO: read the resource name from status and perform update
     pass
 
 
@@ -35,28 +37,12 @@ def trigger(spec, status, name, namespace, logger, **kwargs):
         runs = status['trigger']['runs']
 
         if not last_run or (now >= next_run and runs < times):
-            # create pod
-            path = os.path.join(os.path.dirname(__file__),
-                                'podtemplates/ephimeral.yaml')
-            tmpl = open(path, 'rt').read()
-            name_suffix = str(now).split('.')[1]
-            text = tmpl.format(name=f"{name}-{name_suffix}",
-                               image=spec['image'], command=spec['command'])
-            data = yaml.safe_load(text)
-
-            kopf.adopt(data)
-
-            api = kubernetes.client.CoreV1Api()
-            obj = api.create_namespaced_pod(
-                namespace=namespace,
-                body=data,
-            )
-            logger.info(f'Created pod {obj.metadata.name}')
-            # end create pod
+            obj = create_job_from_template(spec, namespace, name, now)
+            logger.info(f'Created job {obj.metadata.name}')
             return {
                 'runs': runs+1,
                 'last_run': now,
-                'last_pod': obj.metadata.name,
+                'last_job': obj.metadata.name,
                 'next_run': scheduled_next_run,
             }
 
@@ -64,12 +50,32 @@ def trigger(spec, status, name, namespace, logger, **kwargs):
             'runs': runs,
             'last_run': last_run,
             'next_run': next_run,
-            'last_pod': status['trigger']['last_pod'],
+            'last_job': status['trigger']['last_job'],
         }
 
     return {
         'runs': 0,
         'last_run': 0,
         'next_run': scheduled_next_run,
-        'last_pod': '',
+        'last_job': '',
     }
+
+
+def create_job_from_template(cr_spec, namespace, name, current_date):
+    path = os.path.join(os.path.dirname(__file__),
+                        'templates/job-template.yaml')
+    tmpl = open(path, 'rt').read()
+    name_suffix = str(current_date).split('.')[1]
+    text = tmpl.format(name=f"{name}-{name_suffix}",
+                       image=cr_spec['image'], command=cr_spec['command'])
+    data = yaml.safe_load(text)
+
+    kopf.adopt(data)
+
+    api = kubernetes.client.BatchV1Api()
+    job = api.create_namespaced_job(
+        namespace=namespace,
+        body=data,
+    )
+
+    return job
