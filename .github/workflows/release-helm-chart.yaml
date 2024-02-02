@@ -25,7 +25,9 @@ jobs:
           version: "v3.13.1"
 
       - name: Package and push chart
+        env:
+          LOCAL_CHART_NAME: ephimeral-cronjob
         run: |
-          helm package ./charts/ephimeral-cronjob
-          export CHART_VERSION=$(grep 'version:' ./charts/ephimeral-cronjob/Chart.yaml | tail -n1 | awk '{ print $2 }')
-          helm push ${{ env.CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}
+          helm package ./charts/${{ env.LOCAL_CHART_NAME }}
+          export CHART_VERSION=$(grep 'version:' ./charts/${{ env.LOCAL_CHART_NAME }}/Chart.yaml | tail -n1 | awk '{ print $2 }')
+          helm push ${{ env.LOCAL_CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}
