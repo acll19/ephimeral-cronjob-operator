@@ -16,14 +16,16 @@ jobs:
       packages: write
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Install Helm 3
         uses: azure/setup-helm@v3
         with:
-          version: 'v3.13.1'
+          version: "v3.13.1"
 
       - name: Package and push chart
         run: |
-            helm package ./charts/ephimeral-cronjob
-            export CHART_VERSION=$(grep 'version:' ./charts/ephimeral-cronjob/Chart.yaml | tail -n1 | awk '{ print $2 }')
-            helm push ${{ env.CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}
-        
+          helm package ./charts/ephimeral-cronjob
+          export CHART_VERSION=$(grep 'version:' ./charts/ephimeral-cronjob/Chart.yaml | tail -n1 | awk '{ print $2 }')
+          helm push ${{ env.CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}
