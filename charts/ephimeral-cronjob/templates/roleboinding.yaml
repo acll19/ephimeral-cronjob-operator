@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "ephimeral-cronjob.serviceAccountName" . }}-rolebinding-namespaced
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "ephimeral-cronjob.serviceAccountName" . }}-role-namespaced
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount }}

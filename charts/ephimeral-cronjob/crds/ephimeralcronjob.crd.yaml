@@ -1,0 +1,40 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ephimeralcronjobs.aca.com
+spec:
+  scope: Namespaced
+  group: aca.com
+  names:
+    kind: EphimeralCronJob
+    plural: ephimeralcronjobs
+    singular: ephimeralcronjob
+    shortNames:
+      - ecj
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+          properties:
+            spec:
+              type: object
+              properties:
+                schedule:
+                  type: string
+                image:
+                  type: string
+                times:
+                  type: integer
+                  default: 1
+                command:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - schedule
+                - image
+                - command

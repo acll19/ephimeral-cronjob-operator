@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "simple-cronjob"
+version = "0.1.0"
+description = "A simple Kubernetes cronjob controller"
+authors = ["Armando Collazo <acll19@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kopf = "^1.37.1"
+kubernetes = "^29.0.0"
+croniter = "^2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,9 @@
+apiVersion: "aca.com/v1alpha1"
+kind: EphimeralCronJob
+metadata:
+  name: my-new-cron-object
+spec:
+  schedule: "*/1 * * * *"
+  image: busybox
+  times: 5
+  command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 10s']
