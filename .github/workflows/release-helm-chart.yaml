@@ -24,6 +24,15 @@ jobs:
         with:
           version: "v3.13.1"
 
+      - name: Login to GitHub Container Registry
+        env:
+          USERNAME: ${{ github.actor }}
+          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          helm registry login \
+            --username ${{ env.USERNAME }} \
+            --password ${{ env.PASSWORD }}
+
       - name: Package and push chart
         env:
           LOCAL_CHART_NAME: ephimeral-cronjob
