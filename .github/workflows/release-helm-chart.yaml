@@ -28,7 +28,11 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: helm registry login --username ${{ env.USERNAME }} --password ${{ env.PASSWORD }}
+        run: |
+            helm registry login \
+            ${{ env.REGISTRY }} \
+            --username ${{ env.USERNAME }} \
+            --password ${{ env.PASSWORD }}
 
       - name: Package and push chart
         env:
