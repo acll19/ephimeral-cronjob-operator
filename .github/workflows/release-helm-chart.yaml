@@ -3,6 +3,9 @@ name: Release Helm chart
 on:
   push:
     branches: ["main"]
+    paths:
+      - "charts/ephimeral-cronjob-operator/**"
+      - ".github/workflows/release-helm-chart.yaml"
 env:
   REGISTRY: ghcr.io/acll19
   CHART_NAME: ${{ github.repository }}-operator
@@ -29,10 +32,10 @@ jobs:
           USERNAME: ${{ github.actor }}
           PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            helm registry login \
-            ${{ env.REGISTRY }} \
-            --username ${{ env.USERNAME }} \
-            --password ${{ env.PASSWORD }}
+          helm registry login \
+          ${{ env.REGISTRY }} \
+          --username ${{ env.USERNAME }} \
+          --password ${{ env.PASSWORD }}
 
       - name: Package and push chart
         env:
