@@ -8,5 +8,5 @@ roleRef:
   name: {{ include "ephimeral-cronjob.serviceAccountName" . }}-role-cluster
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount }}
+    name: {{ .Values.serviceAccount.name }}
     namespace: "{{ .Release.Namespace }}"

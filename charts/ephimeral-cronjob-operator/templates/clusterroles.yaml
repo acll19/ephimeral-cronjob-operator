@@ -22,7 +22,15 @@ rules:
     resources: [validatingwebhookconfigurations, mutatingwebhookconfigurations]
     verbs: [create, patch]
 
-  # Application: read-only access for watching cluster-wide.
+  # Framework: posting the events about the handlers progress/errors.
+  - apiGroups: [""]
+    resources: [events]
+    verbs: [create]
+
+  # Application: access for watching+patching cluster-wide.
   - apiGroups: [aca.com]
     resources: [ephimeralcronjobs]
-    verbs: [list, watch]
+    verbs: [list, watch, patch]
+  - apiGroups: [batch]
+    resources: [jobs]
+    verbs: [create]

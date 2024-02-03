@@ -8,4 +8,4 @@ roleRef:
   name: {{ include "ephimeral-cronjob.serviceAccountName" . }}-role-namespaced
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount }}
+    name: {{ .Values.serviceAccount.name }}
