@@ -1,6 +1,6 @@
 # ephimeral-cronjob-operator
 
-This is a sample operator built with [Kopf](https://kopf.readthedocs.io). Manages a Kubernetes custom resource called `EphimeralCronJob` which takes a cron expression and a number of times you want the job to run.
+This is a sample operator built with [Kopf](https://kopf.readthedocs.io). The operator manages a Kubernetes custom resource called `EphimeralCronJob` which takes a cron expression and a number of times you want the job to run.
 
 ## Example
 
